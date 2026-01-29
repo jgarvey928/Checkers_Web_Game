@@ -4,7 +4,7 @@ A fully interactive, browser-based implementation of the classic board game Chec
 
 ## 🎮 Live Demo
 
-Play the game online here: **[garveyscheckersgame.com](https://garveyscheckersgame.com)**
+Play the game online here: **[jgarvey928.github.io/Checkers_Web_Game/](https://jgarvey928.github.io/Checkers_Web_Game/)**
 
 ## ✨ Features
 
