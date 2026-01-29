@@ -87,3 +87,14 @@ h1 {
     color: #ffc107;
     text-shadow: 2px 2px 4px #000000;
 }
+
+.status-indicator {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #8B4513;
+    border: 2px solid #A0522D;
+    border-radius: 5px;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+}

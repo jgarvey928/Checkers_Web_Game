@@ -1,5 +1,6 @@
 const boardElement = document.getElementById('board');
 const statusElement = document.createElement('div');
+statusElement.classList.add('status-indicator');
 const winnerOverlay = document.getElementById('winner-overlay');
 const winnerMessage = document.getElementById('winner-message');
 document.body.appendChild(statusElement);
