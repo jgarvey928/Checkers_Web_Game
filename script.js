@@ -290,7 +290,11 @@ function hasAnyValidMoves(isRed) {
 }
 
 function updateStatus() {
-    statusElement.textContent = isRedTurn ? "Red's turn" : "Black's turn";
+    if (chainJumpInProgress) {
+        statusElement.textContent = isRedTurn ? "Still Red's turn" : "Still Black's turn";
+    } else {
+        statusElement.textContent = isRedTurn ? "Red's turn" : "Black's turn";
+    }
 }
 
 function checkWinner() {
