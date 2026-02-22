@@ -53,7 +53,7 @@ This project is a static web application and requires no build steps or backend 
 ## 🕹️ How to Play
 
 1.  **Start:** The game begins in Single Player mode. You play as **Red** (bottom), and the computer plays as **Black** (top).
-2.  **Move:** Click on a piece to select it (highlighted in yellow), then click a valid diagonal dark square to move.
+2.  **Move:** Click on a piece to select it (highlighted in yellow), then click a valid diagonal tan square to move.
 3.  **Capture:** If an opponent's piece is diagonally adjacent and the square behind it is empty, you can jump over it to capture it.
 4.  **Win:** The game ends when one player loses all their pieces or cannot make a valid move.
 

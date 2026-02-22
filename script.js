@@ -880,7 +880,7 @@ class UIController {
                 <h3 style="color: #1e4d2b;">🕹️ How to Play</h3>
                 <ol>
                     <li><strong>Start:</strong> The game begins in Single Player mode. You play as <strong>Red</strong> (bottom), and the computer plays as <strong>Black</strong> (top).</li>
-                    <li><strong>Move:</strong> Click on a piece to select it (highlighted in yellow), then click a valid diagonal dark square to move.</li>
+                    <li><strong>Move:</strong> Click on a piece to select it (highlighted in yellow), then click a valid diagonal tan square to move.</li>
                     <li><strong>Capture:</strong> If an opponent's piece is diagonally adjacent and the square behind it is empty, you can jump over it to capture it.</li>
                     <li><strong>Win:</strong> The game ends when one player loses all their pieces or cannot make a valid move.</li>
                 </ol>
