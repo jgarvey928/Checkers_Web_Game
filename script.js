@@ -15,16 +15,16 @@ document.body.style.overflow = "auto";
 const boardElement = document.getElementById('board');
 const statusElement = document.createElement('div');
 statusElement.classList.add('status-indicator');
-statusElement.style.padding = "10px 10px";
-statusElement.style.width = "220px";
+statusElement.style.padding = "8px 5px";
+statusElement.style.width = "185px";
 statusElement.style.boxSizing = "border-box";
 const winnerOverlay = document.getElementById('winner-overlay');
 const winnerMessage = document.getElementById('winner-message');
 
-let isSinglePlayer = false;
+let isSinglePlayer = true;
 const singlePlayerButton = document.createElement('button');
-singlePlayerButton.textContent = "Enable Single Player";
-singlePlayerButton.style.cssText = "display: block; margin: 10px auto 20px auto; padding: 12px 10px; width: 220px; box-sizing: border-box; font-size: 16px; font-weight: bold; cursor: pointer; background: linear-gradient(to bottom, #444, #222); color: white; border: 2px solid #555; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.2s ease;";
+singlePlayerButton.textContent = "Disable NPC (Me)";
+singlePlayerButton.style.cssText = "display: block; margin: 2px auto; padding: 10px 5px; width: 185px; box-sizing: border-box; font-size: 14px; font-weight: bold; cursor: pointer; background: linear-gradient(to bottom, #444, #222); color: white; border: 2px solid #555; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.2s ease;";
 
 singlePlayerButton.addEventListener('mouseover', () => {
     singlePlayerButton.style.transform = 'translateY(-2px)';
@@ -38,6 +38,24 @@ singlePlayerButton.addEventListener('mouseout', () => {
     singlePlayerButton.style.background = 'linear-gradient(to bottom, #444, #222)';
 });
 
+const resetButton = document.createElement('button');
+resetButton.textContent = "Reset Game";
+resetButton.style.cssText = "display: block; margin: 2px auto; padding: 10px 5px; width: 185px; box-sizing: border-box; font-size: 14px; font-weight: bold; cursor: pointer; background: linear-gradient(to bottom, #444, #222); color: white; border: 2px solid #555; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.2s ease;";
+
+resetButton.addEventListener('mouseover', () => {
+    resetButton.style.transform = 'translateY(-2px)';
+    resetButton.style.boxShadow = '0 6px 12px rgba(0,0,0,0.4)';
+    resetButton.style.background = 'linear-gradient(to bottom, #555, #333)';
+});
+
+resetButton.addEventListener('mouseout', () => {
+    resetButton.style.transform = 'translateY(0)';
+    resetButton.style.boxShadow = '0 4px 6px rgba(0,0,0,0.3)';
+    resetButton.style.background = 'linear-gradient(to bottom, #444, #222)';
+});
+
+resetButton.addEventListener('click', resetGame);
+
 let container = boardElement;
 while (container.parentNode && container.parentNode !== document.body) {
     container = container.parentNode;
@@ -47,10 +65,10 @@ const gameLayout = document.createElement('div');
 gameLayout.style.cssText = "position: relative; display: inline-block;";
 
 const profileGroup = document.createElement('div');
-profileGroup.style.cssText = "display: flex; flex-direction: column; align-items: center; gap: 10px; position: absolute; right: 100%; top: -160px; margin-right: 40px; width: max-content;";
+profileGroup.style.cssText = "display: flex; flex-direction: column; align-items: center; gap: 10px; position: absolute; right: 100%; top: -170px; margin-right: 40px; width: max-content;";
 
 const controlsGroup = document.createElement('div');
-controlsGroup.style.cssText = "display: flex; flex-direction: column; gap: 10px; position: absolute; right: 100%; top: 25px; margin-right: 10px; width: max-content;";
+controlsGroup.style.cssText = "display: flex; flex-direction: column; gap: 2px; position: absolute; right: 100%; top: 18px; margin-right: 35px; width: max-content;";
 
 document.body.insertBefore(gameLayout, container);
 gameLayout.appendChild(container);
@@ -64,7 +82,7 @@ profileLink.style.cssText = "display: block; width: 140px; height: 140px; margin
 
 const profilePic = document.createElement('img');
 profilePic.src = 'JGarvey_Prof_Profile.jpg';
-profilePic.style.cssText = "width: 100%; height: 100%; border-radius: 50%; border: 4px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.5); object-fit: cover; transition: transform 0.3s ease;";
+profilePic.style.cssText = "width: 100%; height: 100%; border-radius: 50%; border: 4px solid black; box-shadow: 0 4px 8px rgba(0,0,0,0.5); object-fit: cover; transition: transform 0.3s ease;";
 profilePic.addEventListener('mouseover', () => profilePic.style.transform = 'scale(1.1)');
 profilePic.addEventListener('mouseout', () => profilePic.style.transform = 'scale(1)');
 
@@ -72,15 +90,16 @@ profileLink.appendChild(profilePic);
 profileGroup.appendChild(profileLink);
 controlsGroup.appendChild(statusElement);
 controlsGroup.appendChild(singlePlayerButton);
+controlsGroup.appendChild(resetButton);
 
 const capturedContainer = document.createElement('div');
-capturedContainer.style.cssText = "display: flex; flex-direction: column; gap: 10px; position: absolute; right: 100%; bottom: 25px; margin-right: 10px;";
+capturedContainer.style.cssText = "display: flex; flex-direction: column; gap: 5px; position: absolute; right: 100%; bottom: 25px; margin-right: 10px;";
 
 const blackCaptured = document.createElement('div');
-blackCaptured.style.cssText = "display: grid; grid-template-columns: repeat(4, 50px); grid-template-rows: repeat(3, 30px); gap: 5px; padding: 10px; justify-items: center; background-color: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid #555;";
+blackCaptured.style.cssText = "display: grid; grid-template-columns: repeat(4, 50px); grid-template-rows: repeat(3, 30px); gap: 5px; padding: 10px; justify-items: center; background-color: rgba(0,0,0,0.15); border-radius: 8px; border: 1px solid #555;";
 
 const redCaptured = document.createElement('div');
-redCaptured.style.cssText = "display: grid; grid-template-columns: repeat(4, 50px); grid-template-rows: repeat(3, 30px); gap: 5px; padding: 10px; justify-items: center; background-color: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid #555;";
+redCaptured.style.cssText = "display: grid; grid-template-columns: repeat(4, 50px); grid-template-rows: repeat(3, 30px); gap: 5px; padding: 10px; justify-items: center; background-color: rgba(0,0,0,0.15); border-radius: 8px; border: 1px solid #555;";
 
 capturedContainer.appendChild(blackCaptured);
 capturedContainer.appendChild(redCaptured);
@@ -137,7 +156,7 @@ profileGroup.appendChild(socialContainer);
 
 singlePlayerButton.addEventListener('click', () => {
     isSinglePlayer = !isSinglePlayer;
-    singlePlayerButton.textContent = isSinglePlayer ? "Disable Single Player" : "Enable Single Player";
+    singlePlayerButton.textContent = isSinglePlayer ? "Disable NPC (Me)" : "Enable NPC (Me)";
     profilePic.style.borderColor = isSinglePlayer ? "black" : "white";
     if (isSinglePlayer && !isRedTurn) {
         setTimeout(makeComputerMove, 500);
