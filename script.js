@@ -110,6 +110,11 @@ function isValidMove(row, col) {
     const rowDiff = Math.abs(row - selectedRow);
     const colDiff = Math.abs(col - selectedCol);
 
+    if (!isKing) {
+        if (isRedTurn && row < selectedRow) return false;
+        if (!isRedTurn && row > selectedRow) return false;
+    }
+
     if (chainJumpInProgress) {
         return rowDiff === 2 && colDiff === 2 && isJump(row, col);
     }
