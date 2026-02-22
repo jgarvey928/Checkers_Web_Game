@@ -5,6 +5,37 @@ const winnerOverlay = document.getElementById('winner-overlay');
 const winnerMessage = document.getElementById('winner-message');
 document.body.appendChild(statusElement);
 
+let isSinglePlayer = false;
+const singlePlayerButton = document.createElement('button');
+singlePlayerButton.textContent = "Enable Single Player";
+singlePlayerButton.style.cssText = "display: block; margin: 10px auto 20px auto; padding: 12px 24px; font-size: 16px; font-weight: bold; cursor: pointer; background: linear-gradient(to bottom, #444, #222); color: white; border: 2px solid #555; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.2s ease;";
+
+singlePlayerButton.addEventListener('mouseover', () => {
+    singlePlayerButton.style.transform = 'translateY(-2px)';
+    singlePlayerButton.style.boxShadow = '0 6px 12px rgba(0,0,0,0.4)';
+    singlePlayerButton.style.background = 'linear-gradient(to bottom, #555, #333)';
+});
+
+singlePlayerButton.addEventListener('mouseout', () => {
+    singlePlayerButton.style.transform = 'translateY(0)';
+    singlePlayerButton.style.boxShadow = '0 4px 6px rgba(0,0,0,0.3)';
+    singlePlayerButton.style.background = 'linear-gradient(to bottom, #444, #222)';
+});
+
+let container = boardElement;
+while (container.parentNode && container.parentNode !== document.body) {
+    container = container.parentNode;
+}
+document.body.insertBefore(singlePlayerButton, container);
+
+singlePlayerButton.addEventListener('click', () => {
+    isSinglePlayer = !isSinglePlayer;
+    singlePlayerButton.textContent = isSinglePlayer ? "Disable Single Player" : "Enable Single Player";
+    if (isSinglePlayer && !isRedTurn) {
+        setTimeout(makeComputerMove, 500);
+    }
+});
+
 let board = [];
 let selectedRow = -1;
 let selectedCol = -1;
@@ -72,6 +103,8 @@ function renderBoard() {
 }
 
 function handleSquareClick(event) {
+    if (isSinglePlayer && !isRedTurn) return;
+
     const square = event.target.closest('.square');
     if (!square) return;
 
@@ -154,10 +187,13 @@ function movePiece(row, col) {
     board[row][col] = piece;
 
     // King promotion
+    let promoted = false;
     if (piece === 1 && row === 7) {
         board[row][col] = 3; // Red king
+        promoted = true;
     } else if (piece === 2 && row === 0) {
         board[row][col] = 4; // Black king
+        promoted = true;
     }
 
     const rowDiff = Math.abs(row - selectedRow);
@@ -166,7 +202,7 @@ function movePiece(row, col) {
         const jumpedCol = (col + selectedCol) / 2;
         board[jumpedRow][jumpedCol] = 0;
 
-        if (canJumpFrom(row, col)) {
+        if (!promoted && canJumpFrom(row, col)) {
             selectedRow = row;
             selectedCol = col;
             chainJumpInProgress = true;
@@ -181,6 +217,9 @@ function movePiece(row, col) {
         isRedTurn = !isRedTurn;
         selectedRow = -1;
         selectedCol = -1;
+        if (isSinglePlayer && !isRedTurn) {
+            setTimeout(makeComputerMove, 500);
+        }
     }
 
     checkWinner();
@@ -189,13 +228,14 @@ function movePiece(row, col) {
 function canJumpFrom(r, c) {
     const piece = board[r][c];
     if (piece === 0) return false;
+    const isPieceRed = (piece === 1 || piece === 3);
     const isKing = piece === 3 || piece === 4;
 
     const directions = [];
-    if (isRedTurn || isKing) {
+    if (isPieceRed || isKing) {
         directions.push({r: 1, c: -1}, {r: 1, c: 1});
     }
-    if (!isRedTurn || isKing) {
+    if (!isPieceRed || isKing) {
         directions.push({r: -1, c: -1}, {r: -1, c: 1});
     }
 
@@ -206,9 +246,9 @@ function canJumpFrom(r, c) {
             const jumpedR = r + dir.r;
             const jumpedC = c + dir.c;
             const jumpedPiece = board[jumpedR][jumpedC];
-            if (isRedTurn && (jumpedPiece === 2 || jumpedPiece === 4)) {
+            if (isPieceRed && (jumpedPiece === 2 || jumpedPiece === 4)) {
                 return true;
-            } else if (!isRedTurn && (jumpedPiece === 1 || jumpedPiece === 3)) {
+            } else if (!isPieceRed && (jumpedPiece === 1 || jumpedPiece === 3)) {
                 return true;
             }
         }
@@ -294,6 +334,61 @@ function resetGame() {
     renderBoard();
 }
 
+function makeComputerMove() {
+    if (isRedTurn) return;
+
+    let moves = [];
+    
+    if (chainJumpInProgress) {
+        moves = getMovesForPiece(selectedRow, selectedCol);
+    } else {
+        for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+                if (board[r][c] === 2 || board[r][c] === 4) {
+                    moves = moves.concat(getMovesForPiece(r, c));
+                }
+            }
+        }
+    }
+
+    if (moves.length > 0) {
+        const move = moves[Math.floor(Math.random() * moves.length)];
+        selectedRow = move.fromR;
+        selectedCol = move.fromC;
+        movePiece(move.toR, move.toC);
+        renderBoard();
+
+        if (chainJumpInProgress) {
+            setTimeout(makeComputerMove, 500);
+        }
+    }
+}
+
+function getMovesForPiece(r, c) {
+    const moves = [];
+    const originalSelR = selectedRow;
+    const originalSelC = selectedCol;
+    
+    selectedRow = r;
+    selectedCol = c;
+    
+    const deltas = [
+        {dr: 1, dc: 1}, {dr: 1, dc: -1}, {dr: -1, dc: 1}, {dr: -1, dc: -1},
+        {dr: 2, dc: 2}, {dr: 2, dc: -2}, {dr: -2, dc: 2}, {dr: -2, dc: -2}
+    ];
+
+    for (const d of deltas) {
+        const nr = r + d.dr;
+        const nc = c + d.dc;
+        if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && isValidMove(nr, nc)) {
+            moves.push({fromR: r, fromC: c, toR: nr, toC: nc});
+        }
+    }
+
+    selectedRow = originalSelR;
+    selectedCol = originalSelC;
+    return moves;
+}
 
 boardElement.addEventListener('click', handleSquareClick);
 
