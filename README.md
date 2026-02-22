@@ -59,7 +59,7 @@ This project is a static web application and requires no build steps or backend 
 
 ### Game Modes
 
-*   **Single Player (Default):** The game starts with the NPC enabled. You play as **Black** against the computer ("Me"), which plays as **Red**.
+*   **Single Player (Default):** The game starts with the NPC enabled. You play as **Red** against the computer ("Me"), which plays as **Black**.
 *   **Two Player:** Click the **"Disable NPC (Me)"** button to switch to Two Player mode. In this mode, you can control both Red and Black pieces, allowing you to play against yourself or a friend on the same device. Click **"Enable NPC (Me)"** to return to Single Player mode.
 
 ## 👤 Author
