@@ -94,6 +94,11 @@ function renderBoard() {
             
             if (row === selectedRow && col === selectedCol) {
                 square.classList.add('selected');
+                square.style.boxShadow = 'inset 0 0 20px #ffeb3b, 0 0 15px #ffeb3b';
+                square.style.border = '2px solid #ffeb3b';
+                square.style.transform = 'scale(1.1)';
+                square.style.zIndex = '10';
+                square.style.transition = 'all 0.2s ease';
             }
 
             boardElement.appendChild(square);
