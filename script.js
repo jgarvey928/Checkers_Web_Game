@@ -49,6 +49,7 @@ const LABELS = {
     BTN_ENABLE: "Enable NPC (Me)",
     BTN_RESET: "Reset Game",
     BTN_RESET_SCORE: "Reset Score",
+    BTN_HELP: "Help",
     SCOREBOARD: "SCOREBOARD",
     WIN_YOU: "You Win!",
     WIN_JOHN: "John Wins!",
@@ -143,7 +144,8 @@ const AUDIO_CONFIG = {
 const SOCIAL_LINKS = [
     { url: "https://www.linkedin.com/in/john-s-garvey/", path: "M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" },
     { url: "https://github.com/jgarvey928", path: "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.419-1.305.763-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" },
-    { url: "https://jgarvey928.github.io/jsgarveyportfolio.io/", path: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" }
+    { url: "https://jgarvey928.github.io/jsgarveyportfolio.io/", path: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" },
+    { url: "https://github.com/jgarvey928/Checkers_Web_Game", path: "M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" }
 ];
 
 // ==========================================
@@ -481,7 +483,7 @@ class UIController {
 
         // Profile Group
         this.profileGroup = createElement('div', this.gameLayout, {
-            cssText: "display: flex; flex-direction: column; align-items: center; gap: 10px; position: absolute; right: 100%; top: -170px; margin-right: 40px; width: max-content;"
+            cssText: "display: flex; flex-direction: column; align-items: center; gap: 10px; position: absolute; right: 100%; top: -170px; margin-right: 45px; width: max-content;"
         });
         this.createProfile();
 
@@ -502,6 +504,12 @@ class UIController {
 
         // Captured Pieces
         this.createCapturedContainer();
+
+        // Help Button
+        this.createHelpButton();
+
+        // Help Modal
+        this.createHelpModal();
     }
 
     /**
@@ -523,7 +531,7 @@ class UIController {
         SOCIAL_LINKS.forEach(linkData => {
             const link = createElement('a', socialContainer, {
                 attrs: { href: linkData.url, target: "_blank" },
-                cssText: `display: inline-block; margin: 0 10px; color: ${THEME.SOCIAL_ICON}; opacity: ${THEME.SOCIAL_ICON_OPACITY}; transition: opacity 0.2s; vertical-align: middle;`
+                cssText: `display: inline-block; margin: 0 2px; color: ${THEME.SOCIAL_ICON}; opacity: ${THEME.SOCIAL_ICON_OPACITY}; transition: opacity 0.2s; vertical-align: middle;`
             });
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("viewBox", "0 0 24 24");
@@ -566,6 +574,123 @@ class UIController {
         const capturedStyle = `display: grid; grid-template-columns: repeat(4, 50px); grid-template-rows: repeat(3, 30px); gap: 5px; padding: 10px; justify-items: center; background-color: ${THEME.CAPTURED_BG}; border-radius: 8px; border: 1px solid ${THEME.CAPTURED_BORDER};`;
         this.blackCaptured = createElement('div', capturedContainer, { cssText: capturedStyle });
         this.redCaptured = createElement('div', capturedContainer, { cssText: capturedStyle });
+    }
+
+    /**
+     * Creates a floating help button positioned next to the title.
+     */
+    createHelpButton() {
+        const helpBtn = createElement('button', this.gameLayout, {
+            text: "?",
+            attrs: { title: "Instructions" },
+            cssText: `
+                position: absolute; 
+                left: 100%;
+                top: -60px;
+                margin-left: 70px;
+                width: 40px; 
+                height: 40px; 
+                border-radius: 50%; 
+                background: linear-gradient(145deg, #444, #222);
+                color: #fff; 
+                border: 2px solid #777; 
+                font-family: sans-serif; 
+                font-weight: bold; 
+                font-size: 20px; 
+                cursor: pointer; 
+                box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
+                z-index: 100; 
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: all 0.2s ease;
+            `
+        });
+        
+        helpBtn.addEventListener('mouseover', () => {
+            helpBtn.style.transform = 'scale(1.1)';
+            helpBtn.style.boxShadow = '0 6px 8px rgba(0,0,0,0.5)';
+            helpBtn.style.borderColor = '#fff';
+        });
+        
+        helpBtn.addEventListener('mouseout', () => {
+            helpBtn.style.transform = 'scale(1)';
+            helpBtn.style.boxShadow = '0 4px 6px rgba(0,0,0,0.3)';
+            helpBtn.style.borderColor = '#777';
+        });
+        
+        helpBtn.addEventListener('click', () => this.showHelp());
+    }
+
+    /**
+     * Creates the modal overlay for displaying the Help content.
+     */
+    createHelpModal() {
+        this.helpOverlay = createElement('div', document.body, {
+            cssText: "display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); z-index: 3000; justify-content: center; align-items: center;"
+        });
+        
+        const modalContainer = createElement('div', this.helpOverlay, {
+            cssText: "position: relative; width: 90%; max-width: 600px; max-height: 85vh; background-color: #fff; border-radius: 8px; padding: 25px; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.5); color: #333; font-family: sans-serif;"
+        });
+
+        const closeBtn = createElement('button', modalContainer, {
+            text: "×",
+            cssText: "position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 28px; font-weight: bold; cursor: pointer; color: #555; line-height: 1;"
+        });
+        closeBtn.onclick = () => this.helpOverlay.style.display = 'none';
+
+        this.helpContent = createElement('div', modalContainer, {
+            cssText: "overflow-y: auto; padding-right: 10px; line-height: 1.6;"
+        });
+
+        this.helpOverlay.addEventListener('click', (e) => {
+            if (e.target === this.helpOverlay) this.helpOverlay.style.display = 'none';
+        });
+    }
+
+    /**
+     * Displays the help modal with the formatted instructions.
+     */
+    showHelp() {
+        this.helpOverlay.style.display = 'flex';
+        if (!this.helpContent.innerHTML) {
+            this.helpContent.innerHTML = `
+                <h2 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">John Garvey's Checkers Web Game</h2>
+                <p>A fully interactive, browser-based implementation of the classic board game Checkers (also known as Draughts). This application brings the traditional tabletop experience to the web using modern web technologies.</p>
+                
+                <h3 style="color: #1e4d2b;">🕹️ How to Play</h3>
+                <ol>
+                    <li><strong>Start:</strong> The game begins in Single Player mode. You play as <strong>Black</strong> (bottom), and the computer plays as <strong>Red</strong> (top).</li>
+                    <li><strong>Move:</strong> Click on a piece to select it (highlighted in yellow), then click a valid diagonal dark square to move.</li>
+                    <li><strong>Capture:</strong> If an opponent's piece is diagonally adjacent and the square behind it is empty, you can jump over it to capture it.</li>
+                    <li><strong>Win:</strong> The game ends when one player loses all their pieces or cannot make a valid move.</li>
+                </ol>
+
+                <h4 style="margin-bottom: 5px;">Game Modes</h4>
+                <ul style="margin-top: 5px;">
+                    <li><strong>Single Player (Default):</strong> The game starts with the NPC enabled. You play as <strong>Black</strong> against the computer ("Me"), which plays as <strong>Red</strong>.</li>
+                    <li><strong>Two Player:</strong> Click the <strong>"Disable NPC (Me)"</strong> button to switch to Two Player mode. In this mode, you can control both Red and Black pieces, allowing you to play against yourself or a friend on the same device. Click <strong>"Enable NPC (Me)"</strong> to return to Single Player mode.</li>
+                </ul>
+
+                <h3 style="color: #1e4d2b;">✨ Features</h3>
+                <h4 style="margin-bottom: 5px;">Core Gameplay</h4>
+                <ul style="margin-top: 5px;">
+                    <li><strong>Classic Rules:</strong> Full implementation of standard checkers rules, including turn-based movement and mandatory capturing logic.</li>
+                    <li><strong>Single Player Mode:</strong> Challenge a built-in computer opponent (NPC) with intelligent move selection.</li>
+                    <li><strong>Move Validation:</strong> The game engine strictly enforces valid moves, preventing illegal actions.</li>
+                    <li><strong>King Promotion:</strong> Pieces reaching the opposite end of the board are automatically promoted to Kings, gaining multi-directional movement.</li>
+                    <li><strong>Chain Jumps:</strong> Supports complex multi-jump sequences (double/triple jumps) in a single turn.</li>
+                    <li><strong>Win Detection:</strong> Automatically detects victory conditions when a player captures all opponent pieces or blocks all moves.</li>
+                </ul>
+
+                <h3 style="color: #1e4d2b;">👤 Author</h3>
+                <p style="margin: 10px 0;"><strong>John S. Garvey</strong></p>
+
+                <h3 style="color: #1e4d2b;">Code</h3>
+                <p style="margin: 10px 0;"><a href="https://github.com/jgarvey928/Checkers_Web_Game" target="_blank" style="color: #1e4d2b; text-decoration: none; font-weight: bold;">GitHub Repo</a></p>
+            `;
+        }
     }
 
     /**
