@@ -217,6 +217,38 @@ function canJumpFrom(r, c) {
     return false;
 }
 
+function hasAnyValidMoves(isRed) {
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const piece = board[r][c];
+            if (piece === 0) continue;
+
+            const isPieceRed = (piece === 1 || piece === 3);
+            if (isPieceRed !== isRed) continue;
+
+            if (canJumpFrom(r, c)) return true;
+
+            const isKing = (piece === 3 || piece === 4);
+            const directions = [];
+            if (isRed || isKing) {
+                directions.push({r: 1, c: -1}, {r: 1, c: 1});
+            }
+            if (!isRed || isKing) {
+                directions.push({r: -1, c: -1}, {r: -1, c: 1});
+            }
+
+            for (const dir of directions) {
+                const nr = r + dir.r;
+                const nc = c + dir.c;
+                if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && board[nr][nc] === 0) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 function updateStatus() {
     statusElement.textContent = isRedTurn ? "Red's turn" : "Black's turn";
 }
@@ -239,6 +271,8 @@ function checkWinner() {
         winner = 'Black';
     } else if (!blackHasPieces) {
         winner = 'Red';
+    } else if (!hasAnyValidMoves(isRedTurn)) {
+        winner = isRedTurn ? 'Black' : 'Red';
     }
 
     if (winner) {
