@@ -351,8 +351,58 @@ function makeComputerMove() {
         }
     }
 
-    if (moves.length > 0) {
-        const move = moves[Math.floor(Math.random() * moves.length)];
+    if (moves.length === 0) return;
+
+    let bestMoves = [];
+
+    // 1. King Promotion
+    const promotionMoves = moves.filter(m => {
+        const piece = board[m.fromR][m.fromC];
+        return piece === 2 && m.toR === 0;
+    });
+
+    if (promotionMoves.length > 0) {
+        bestMoves = promotionMoves;
+    } else {
+        const jumps = moves.filter(m => Math.abs(m.fromR - m.toR) === 2);
+        
+        if (jumps.length > 0) {
+            // 2. Multi-jumps
+            const multiJumps = jumps.filter(m => {
+                const piece = board[m.fromR][m.fromC];
+                const capturedR = (m.fromR + m.toR) / 2;
+                const capturedC = (m.fromC + m.toC) / 2;
+                const capturedPiece = board[capturedR][capturedC];
+
+                // Simulate move
+                board[m.toR][m.toC] = piece;
+                board[m.fromR][m.fromC] = 0;
+                board[capturedR][capturedC] = 0;
+
+                const canChain = canJumpFrom(m.toR, m.toC);
+
+                // Restore board
+                board[m.fromR][m.fromC] = piece;
+                board[m.toR][m.toC] = 0;
+                board[capturedR][capturedC] = capturedPiece;
+
+                return canChain;
+            });
+
+            if (multiJumps.length > 0) {
+                bestMoves = multiJumps;
+            } else {
+                // 3. Single Jumps
+                bestMoves = jumps;
+            }
+        } else {
+            // 4. Random Moves
+            bestMoves = moves;
+        }
+    }
+
+    if (bestMoves.length > 0) {
+        const move = bestMoves[Math.floor(Math.random() * bestMoves.length)];
         selectedRow = move.fromR;
         selectedCol = move.fromC;
         movePiece(move.toR, move.toC);
