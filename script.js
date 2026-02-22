@@ -842,7 +842,7 @@ class UIController {
                 
                 <h3 style="color: #1e4d2b;">🕹️ How to Play</h3>
                 <ol>
-                    <li><strong>Start:</strong> The game begins in Single Player mode. You play as <strong>Black</strong> (bottom), and the computer plays as <strong>Red</strong> (top).</li>
+                    <li><strong>Start:</strong> The game begins in Single Player mode. You play as <strong>Red</strong> (bottom), and the computer plays as <strong>Black</strong> (top).</li>
                     <li><strong>Move:</strong> Click on a piece to select it (highlighted in yellow), then click a valid diagonal dark square to move.</li>
                     <li><strong>Capture:</strong> If an opponent's piece is diagonally adjacent and the square behind it is empty, you can jump over it to capture it.</li>
                     <li><strong>Win:</strong> The game ends when one player loses all their pieces or cannot make a valid move.</li>
@@ -850,7 +850,7 @@ class UIController {
 
                 <h4 style="margin-bottom: 5px;">Game Modes</h4>
                 <ul style="margin-top: 5px;">
-                    <li><strong>Single Player (Default):</strong> The game starts with the NPC enabled. You play as <strong>Black</strong> against the computer ("Me"), which plays as <strong>Red</strong>.</li>
+                    <li><strong>Single Player (Default):</strong> The game starts with the NPC enabled. You play as <strong>Red</strong> (bottom) against the computer ("Me"), which plays as <strong>Black</strong> (top).</li>
                     <li><strong>Two Player:</strong> Click the <strong>"Disable NPC (Me)"</strong> button to switch to Two Player mode. In this mode, you can control both Red and Black pieces, allowing you to play against yourself or a friend on the same device. Click <strong>"Enable NPC (Me)"</strong> to return to Single Player mode.</li>
                 </ul>
 

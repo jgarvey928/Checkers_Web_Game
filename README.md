@@ -52,14 +52,14 @@ This project is a static web application and requires no build steps or backend 
 
 ## 🕹️ How to Play
 
-1.  **Start:** The game begins in Single Player mode. You play as **Black** (bottom), and the computer plays as **Red** (top).
+1.  **Start:** The game begins in Single Player mode. You play as **Red** (bottom), and the computer plays as **Black** (top).
 2.  **Move:** Click on a piece to select it (highlighted in yellow), then click a valid diagonal dark square to move.
 3.  **Capture:** If an opponent's piece is diagonally adjacent and the square behind it is empty, you can jump over it to capture it.
 4.  **Win:** The game ends when one player loses all their pieces or cannot make a valid move.
 
 ### Game Modes
 
-*   **Single Player (Default):** The game starts with the NPC enabled. You play as **Red** against the computer ("Me"), which plays as **Black**.
+*   **Single Player (Default):** The game starts with the NPC enabled. You play as **Red** (bottom) against the computer ("Me"), which plays as **Black** (top).
 *   **Two Player:** Click the **"Disable NPC (Me)"** button to switch to Two Player mode. In this mode, you can control both Red and Black pieces, allowing you to play against yourself or a friend on the same device. Click **"Enable NPC (Me)"** to return to Single Player mode.
 
 ## 👤 Author
