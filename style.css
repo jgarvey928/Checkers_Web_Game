@@ -1,64 +1,142 @@
+/**
+ * @file style.css
+ * @description The primary stylesheet for the Checkers Web Application.
+ * This file defines the visual design system, layout structure, and component styling.
+ * It utilizes modern CSS3 techniques including CSS Custom Properties (Variables),
+ * CSS Grid for the board layout, and Flexbox for UI alignment.
+ *
+ * Key Visual Features:
+ * - Realistic design with realistic wood and felt textures.
+ * - Responsive layout for various screen sizes.
+ * - 3D effects for game pieces using box-shadows.
+ * - Dynamic overlays for game states.
+ *
+ * @author John S. Garvey
+ * @date October 2023
+ */
+
+/* -------------------------------------------------------------------------- */
+/*                                 1. Variables                               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * CSS Custom Properties (Variables)
+ * Defines the global design tokens for colors, dimensions, and typography.
+ * These variables allow for easy theming and consistent styling across the app.
+ */
+:root {
+    /* --- Color Palette: Backgrounds --- */
+    --app-background-color: #1e4d2b;
+
+    /* --- Color Palette: Game Board --- */
+    --board-frame-color: #8B4513; /* SaddleBrown */
+    --board-border-color: #A0522D;  /* Sienna */
+    --square-color-light: #006400; /* DarkGreen */
+    --square-color-dark: #F5DEB3;  /* Wheat */
+
+    /* --- Color Palette: Game Pieces --- */
+    --piece-color-black: #333333;
+    --piece-color-red: #ff0000;
+
+    /* --- Color Palette: UI & Text --- */
+    --text-color-primary: #ffffff;
+    --text-color-highlight: #ffc107;
+    --selection-color: #ffff00;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --overlay-color: rgba(0, 0, 0, 0.5);
+
+    /* --- Dimensions & Layout --- */
+    --grid-column-count: 8;
+    --board-square-size: 50px;
+    --game-piece-size: 40px;
+
+    /* --- Typography --- */
+    --font-family-body: sans-serif;
+    --font-family-display: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               2. Global Layout                             */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Body Layout
+ * Sets up the main viewport container with a flex column layout to center content.
+ * Applies a complex background gradient to simulate a felt texture.
+ */
 body {
-    font-family: sans-serif;
+    font-family: var(--font-family-body);
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Luxury Green Felt Texture */
-    background-color: #1e4d2b;
+    
+    /* Background: Radial gradient for lighting + Repeating linear gradient for texture */
+    background-color: var(--app-background-color);
     background-image: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.4) 100%),
                       repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 2px, transparent 2px, transparent 4px);
     min-height: 100vh;
     margin: 0;
 }
 
-h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 3rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 8px;
-    color: white;
-    background: linear-gradient(to bottom, #ffffff 0%, #bfbfbf 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-    margin: 50px 0 40px 0;
-    text-align: center;
-}
+/* -------------------------------------------------------------------------- */
+/*                               3. Game Board                                */
+/* -------------------------------------------------------------------------- */
 
-
+/**
+ * Board Frame
+ * The outer container for the game board, styled to look like a wooden frame.
+ * Uses box-shadows to create depth and a beveled edge effect.
+ */
 #board-frame {
-    background-color: #8B4513; /* SaddleBrown */
+    background-color: var(--board-frame-color);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0,0,0,0.5);
-    border: 5px solid #A0522D; /* Sienna */
+    box-shadow: 10px 10px 20px var(--shadow-color), inset 0 0 10px var(--shadow-color);
+    border: 5px solid var(--board-border-color);
 }
 
+/**
+ * Board Grid
+ * The 8x8 playing surface. Uses CSS Grid Layout for precise square positioning.
+ */
 #board {
     display: grid;
-    grid-template-columns: repeat(8, 50px);
-    grid-template-rows: repeat(8, 50px);
-    border: 2px solid #333;
+    grid-template-columns: repeat(var(--grid-column-count), var(--board-square-size));
+    grid-template-rows: repeat(var(--grid-column-count), var(--board-square-size));
+    border: 2px solid var(--piece-color-black);
 }
 
+/**
+ * Board Squares
+ * Individual cells of the grid.
+ */
 .square {
-    width: 50px;
-    height: 50px;
+    width: var(--board-square-size);
+    height: var(--board-square-size);
 }
 
+/* Alternating square colors */
 .light {
-    background-color: #006400; /* DarkGreen */
+    background-color: var(--square-color-light);
 }
 
 .dark {
-    background-color: #F5DEB3; /* wheat */
+    background-color: var(--square-color-dark);
 }
 
+/* -------------------------------------------------------------------------- */
+/*                               4. Game Pieces                               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Base Piece Style
+ * Represents a checker piece. Uses border-radius for the circular shape and
+ * multiple box-shadows to create a 3D, beveled appearance.
+ * Flexbox is used to center the 'K' symbol for Kings.
+ */
 .piece {
-    width: 40px;
-    height: 40px;
+    width: var(--game-piece-size);
+    height: var(--game-piece-size);
     border-radius: 50%;
     margin: 5px;
     cursor: pointer;
@@ -66,7 +144,9 @@ h1 {
     justify-content: center;
     align-items: center;
     font-size: 20px;
-    color: white;
+    color: var(--text-color-primary);
+    
+    /* 3D Bevel Effect */
     box-shadow: 
         inset 0 0 0 2px rgba(0,0,0,0.2),
         inset 0 0 0 5px rgba(255,255,255,0.1),
@@ -74,22 +154,62 @@ h1 {
         0 2px 2px rgba(0,0,0,0.2);
 }
 
+/* Piece Variants */
+.red {
+    background-color: var(--piece-color-red);
+}
+
+.black {
+    background-color: var(--piece-color-black);
+}
+
+/**
+ * King Modifier
+ * Adds a visual indicator (letter 'K') to promoted pieces.
+ */
 .king::after {
     content: 'K';
 }
 
+/**
+ * Selection State
+ * Highlights the currently selected piece with a distinct border.
+ */
 .selected {
-    border: 2px solid yellow;
+    border: 2px solid var(--selection-color);
 }
 
-.red {
-    background-color: red;
+/* -------------------------------------------------------------------------- */
+/*                               5. User Interface                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Main Title
+ * Styled with a metallic gradient fill and drop shadow for a premium look.
+ */
+h1 {
+    font-family: var(--font-family-display);
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    color: var(--text-color-primary);
+    
+    /* Metallic Text Gradient */
+    background: linear-gradient(to bottom, #ffffff 0%, #bfbfbf 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    filter: drop-shadow(0 4px 6px var(--shadow-color));
+    margin: 50px 0 40px 0;
+    text-align: center;
 }
 
-.black {
-    background-color: #333;
-}
-
+/**
+ * Winner Overlay
+ * A full-screen modal overlay displayed when the game ends.
+ */
 #winner-overlay {
     position: fixed;
     top: 0;
@@ -97,26 +217,33 @@ h1 {
     width: 100%;
     height: 100%;
     z-index: 2000;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--overlay-color);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+/**
+ * Winner Message Text
+ * Large, highlighted text to announce the winner.
+ */
 #winner-message {
     font-size: 50px;
     font-weight: bold;
-    color: #ffc107;
+    color: var(--text-color-highlight);
     text-shadow: 2px 2px 4px #000000;
 }
 
+/**
+ * Status Indicator
+ * Displays the current turn or game status.
+ * Styled to match the board frame aesthetics.
+ */
 .status-indicator {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #8B4513;
-    border: 2px solid #A0522D;
+    background-color: var(--board-frame-color);
+    border: 2px solid var(--board-border-color);
     border-radius: 5px;
-    color: white;
+    color: var(--text-color-primary);
     font-size: 18px;
     text-align: center;
 }
