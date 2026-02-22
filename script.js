@@ -1,9 +1,11 @@
+const titleElement = document.querySelector('h1');
+if (titleElement) titleElement.innerHTML = "John Garvey's<br>Checkers Game";
+
 const boardElement = document.getElementById('board');
 const statusElement = document.createElement('div');
 statusElement.classList.add('status-indicator');
 const winnerOverlay = document.getElementById('winner-overlay');
 const winnerMessage = document.getElementById('winner-message');
-document.body.appendChild(statusElement);
 
 let isSinglePlayer = false;
 const singlePlayerButton = document.createElement('button');
@@ -26,7 +28,19 @@ let container = boardElement;
 while (container.parentNode && container.parentNode !== document.body) {
     container = container.parentNode;
 }
-document.body.insertBefore(singlePlayerButton, container);
+
+const gameLayout = document.createElement('div');
+gameLayout.style.cssText = "position: relative; display: inline-block;";
+
+const sidebar = document.createElement('div');
+sidebar.style.cssText = "display: flex; flex-direction: column; gap: 10px; position: absolute; right: 100%; top: 0; margin-right: 20px; width: max-content;";
+
+document.body.insertBefore(gameLayout, container);
+gameLayout.appendChild(container);
+gameLayout.appendChild(sidebar);
+
+sidebar.appendChild(statusElement);
+sidebar.appendChild(singlePlayerButton);
 
 const socialContainer = document.createElement('div');
 socialContainer.style.cssText = "position: absolute; top: 20px; right: 20px; z-index: 100;";
@@ -67,6 +81,7 @@ singlePlayerButton.addEventListener('click', () => {
     if (isSinglePlayer && !isRedTurn) {
         setTimeout(makeComputerMove, 500);
     }
+    updateStatus();
 });
 
 let board = [];
@@ -329,9 +344,17 @@ function hasAnyValidMoves(isRed) {
 
 function updateStatus() {
     if (chainJumpInProgress) {
-        statusElement.textContent = isRedTurn ? "Still Red's turn" : "Still Black's turn";
+        if (isSinglePlayer && isRedTurn) {
+            statusElement.textContent = "Still Your Turn";
+        } else {
+            statusElement.textContent = isRedTurn ? "Still Red's Turn" : "Still Black's Turn";
+        }
     } else {
-        statusElement.textContent = isRedTurn ? "Red's turn" : "Black's turn";
+        if (isSinglePlayer && isRedTurn) {
+            statusElement.textContent = "Your Turn";
+        } else {
+            statusElement.textContent = isRedTurn ? "Red's Turn" : "Black's Turn";
+        }
     }
 }
 
