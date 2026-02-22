@@ -13,7 +13,7 @@ Play the game online here: **[Checkers Web Game Live Demo](https://jgarvey928.gi
 ## ✨ Features
 
 ### Core Gameplay
-*   **Classic Rules:** Full implementation of standard checkers rules, including turn-based movement and mandatory capturing logic.
+*   **Classic Rules:** Full implementation of standard checkers rules, including turn-based movement, chain jumping, and kinging promotions.
 *   **Single Player Mode:** Challenge a built-in computer opponent (NPC) with intelligent move selection.
 *   **Move Validation:** The game engine strictly enforces valid moves, preventing illegal actions.
 *   **King Promotion:** Pieces reaching the opposite end of the board are automatically promoted to Kings, gaining multi-directional movement.

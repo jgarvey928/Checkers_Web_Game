@@ -894,7 +894,7 @@ class UIController {
                 <h3 style="color: #1e4d2b;">✨ Features</h3>
                 <h4 style="margin-bottom: 5px;">Core Gameplay</h4>
                 <ul style="margin-top: 5px;">
-                    <li><strong>Classic Rules:</strong> Full implementation of standard checkers rules, including turn-based movement and mandatory capturing logic.</li>
+                    <li><strong>Classic Rules:</strong> Full implementation of standard checkers rules, including turn-based movement, chain jumping, and kinging promotions.</li>
                     <li><strong>Single Player Mode:</strong> Challenge a built-in computer opponent (NPC) with intelligent move selection.</li>
                     <li><strong>Move Validation:</strong> The game engine strictly enforces valid moves, preventing illegal actions.</li>
                     <li><strong>King Promotion:</strong> Pieces reaching the opposite end of the board are automatically promoted to Kings, gaining multi-directional movement.</li>
