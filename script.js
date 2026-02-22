@@ -42,6 +42,35 @@ gameLayout.appendChild(sidebar);
 sidebar.appendChild(statusElement);
 sidebar.appendChild(singlePlayerButton);
 
+const capturedContainer = document.createElement('div');
+capturedContainer.style.cssText = "display: flex; flex-direction: column; gap: 20px; margin-top: 20px;";
+
+const blackCaptured = document.createElement('div');
+blackCaptured.style.cssText = "display: grid; grid-template-columns: repeat(4, 30px); grid-template-rows: repeat(3, 30px); gap: 5px; padding: 10px; background-color: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid #555;";
+
+const redCaptured = document.createElement('div');
+redCaptured.style.cssText = "display: grid; grid-template-columns: repeat(4, 30px); grid-template-rows: repeat(3, 30px); gap: 5px; padding: 10px; background-color: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid #555;";
+
+capturedContainer.appendChild(blackCaptured);
+capturedContainer.appendChild(redCaptured);
+sidebar.appendChild(capturedContainer);
+
+function addCapturedPiece(piece) {
+    const pieceElement = document.createElement('div');
+    pieceElement.classList.add('piece');
+    pieceElement.style.cssText = "width: 30px; height: 30px; margin: 0; font-size: 14px; cursor: default; box-shadow: inset 0 0 0 2px rgba(0,0,0,0.2), inset 0 0 0 4px rgba(255,255,255,0.1);";
+    
+    if (piece === 1 || piece === 3) {
+        pieceElement.classList.add('red');
+        if (piece === 3) pieceElement.classList.add('king');
+        redCaptured.appendChild(pieceElement);
+    } else {
+        pieceElement.classList.add('black');
+        if (piece === 4) pieceElement.classList.add('king');
+        blackCaptured.appendChild(pieceElement);
+    }
+}
+
 const socialContainer = document.createElement('div');
 socialContainer.style.cssText = "position: absolute; top: 20px; right: 20px; z-index: 100;";
 
@@ -253,7 +282,9 @@ function movePiece(row, col) {
     if (rowDiff === 2) {
         const jumpedRow = (row + selectedRow) / 2;
         const jumpedCol = (col + selectedCol) / 2;
+        const jumpedPiece = board[jumpedRow][jumpedCol];
         board[jumpedRow][jumpedCol] = 0;
+        addCapturedPiece(jumpedPiece);
 
         if (!promoted && canJumpFrom(row, col)) {
             selectedRow = row;
@@ -391,6 +422,8 @@ function checkWinner() {
 }
 
 function resetGame() {
+    blackCaptured.innerHTML = '';
+    redCaptured.innerHTML = '';
     initializeBoard();
     isRedTurn = true;
     selectedRow = -1;
