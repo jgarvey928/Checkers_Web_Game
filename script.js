@@ -75,6 +75,55 @@ gameLayout.appendChild(container);
 gameLayout.appendChild(profileGroup);
 gameLayout.appendChild(controlsGroup);
 
+const scoreGroup = document.createElement('div');
+scoreGroup.style.cssText = "display: flex; flex-direction: column; align-items: center; gap: 15px; position: absolute; left: 100%; top: 20px; margin-left: 35px; width: 110px; padding: 30px 10px; background-color: #111; border: 4px solid #333; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); font-family: 'Courier New', Courier, monospace; color: #fff;";
+
+const scoreTitle = document.createElement('div');
+scoreTitle.textContent = "SCOREBOARD";
+scoreTitle.style.cssText = "font-weight: bold; font-size: 14px; text-decoration: none; border-bottom: 1px solid #555; padding-bottom: 5px; margin-bottom: 5px; letter-spacing: 1px;";
+
+const topLabel = document.createElement('div');
+topLabel.textContent = isSinglePlayer ? "Me" : "Black";
+topLabel.style.fontWeight = "bold";
+topLabel.style.fontSize = "18px";
+
+const topScoreDisplay = document.createElement('div');
+topScoreDisplay.textContent = "0";
+topScoreDisplay.style.cssText = "font-size: 42px; font-family: 'Courier New', monospace; font-weight: bold; color: #ff0000; background-color: #000; padding: 5px 15px; border: 4px solid #333; border-radius: 4px; box-shadow: inset 0 0 10px #000; text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000; margin-bottom: 10px; min-width: 50px; text-align: center; letter-spacing: 2px;";
+
+const bottomLabel = document.createElement('div');
+bottomLabel.textContent = isSinglePlayer ? "You" : "Red";
+bottomLabel.style.fontWeight = "bold";
+bottomLabel.style.fontSize = "18px";
+
+const bottomScoreDisplay = document.createElement('div');
+bottomScoreDisplay.textContent = "0";
+bottomScoreDisplay.style.cssText = "font-size: 42px; font-family: 'Courier New', monospace; font-weight: bold; color: #ff0000; background-color: #000; padding: 5px 15px; border: 4px solid #333; border-radius: 4px; box-shadow: inset 0 0 10px #000; text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000; min-width: 50px; text-align: center; letter-spacing: 2px;";
+
+const resetScoreButton = document.createElement('button');
+resetScoreButton.textContent = "Reset Score";
+resetScoreButton.style.cssText = "margin-top: 15px; padding: 8px 12px; background: #333; color: #fff; border: 1px solid #555; cursor: pointer; font-family: inherit; font-weight: bold; font-size: 12px; border-radius: 2px; transition: all 0.2s;";
+resetScoreButton.addEventListener('mouseover', () => resetScoreButton.style.backgroundColor = '#444');
+resetScoreButton.addEventListener('mouseout', () => resetScoreButton.style.backgroundColor = '#333');
+
+let blackWins = 0;
+let redWins = 0;
+
+resetScoreButton.addEventListener('click', () => {
+    blackWins = 0;
+    redWins = 0;
+    topScoreDisplay.textContent = "0";
+    bottomScoreDisplay.textContent = "0";
+});
+
+gameLayout.appendChild(scoreGroup);
+scoreGroup.appendChild(scoreTitle);
+scoreGroup.appendChild(topLabel);
+scoreGroup.appendChild(topScoreDisplay);
+scoreGroup.appendChild(bottomLabel);
+scoreGroup.appendChild(bottomScoreDisplay);
+scoreGroup.appendChild(resetScoreButton);
+
 const profileLink = document.createElement('a');
 profileLink.href = "https://www.linkedin.com/in/john-s-garvey/";
 profileLink.target = "_blank";
@@ -158,6 +207,8 @@ singlePlayerButton.addEventListener('click', () => {
     isSinglePlayer = !isSinglePlayer;
     singlePlayerButton.textContent = isSinglePlayer ? "Disable NPC (Me)" : "Enable NPC (Me)";
     profilePic.style.borderColor = isSinglePlayer ? "black" : "white";
+    topLabel.textContent = isSinglePlayer ? "Me" : "Black";
+    bottomLabel.textContent = isSinglePlayer ? "You" : "Red";
     if (isSinglePlayer && !isRedTurn) {
         setTimeout(makeComputerMove, 500);
     }
@@ -471,6 +522,13 @@ function checkWinner() {
     }
 
     if (winner) {
+        if (winner === 'Black') {
+            blackWins++;
+            topScoreDisplay.textContent = blackWins;
+        } else {
+            redWins++;
+            bottomScoreDisplay.textContent = redWins;
+        }
         playSound('win');
         startConfetti();
         if (isSinglePlayer) {
