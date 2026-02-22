@@ -1,6 +1,17 @@
 const titleElement = document.querySelector('h1');
 if (titleElement) titleElement.innerHTML = "John Garvey's<br>Checkers Game";
 
+// Ensure viewport allows zooming and scrolling on mobile devices
+let viewportMeta = document.querySelector('meta[name="viewport"]');
+if (!viewportMeta) {
+    viewportMeta = document.createElement('meta');
+    viewportMeta.name = "viewport";
+    document.head.appendChild(viewportMeta);
+}
+viewportMeta.content = "width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes";
+document.body.style.touchAction = "manipulation";
+document.body.style.overflow = "auto";
+
 const boardElement = document.getElementById('board');
 const statusElement = document.createElement('div');
 statusElement.classList.add('status-indicator');
@@ -703,5 +714,6 @@ function stopConfetti() {
 
 boardElement.addEventListener('click', handleSquareClick);
 
+// --- Initialization ---
 initializeBoard();
 renderBoard();
