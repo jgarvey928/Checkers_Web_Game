@@ -82,9 +82,9 @@ function initializeBoard() {
         for (let col = 0; col < 8; col++) {
             if ((row + col) % 2 !== 0) {
                 if (row < 3) {
-                    board[row][col] = 1; // Red piece
-                } else if (row > 4) {
                     board[row][col] = 2; // Black piece
+                } else if (row > 4) {
+                    board[row][col] = 1; // Red piece
                 } else {
                     board[row][col] = 0; // Empty
                 }
@@ -182,8 +182,8 @@ function isValidMove(row, col) {
     const colDiff = Math.abs(col - selectedCol);
 
     if (!isKing) {
-        if (isRedTurn && row < selectedRow) return false;
-        if (!isRedTurn && row > selectedRow) return false;
+        if (isRedTurn && row > selectedRow) return false;
+        if (!isRedTurn && row < selectedRow) return false;
     }
 
     if (chainJumpInProgress) {
@@ -194,9 +194,9 @@ function isValidMove(row, col) {
         if (isKing) {
             return true;
         }
-        if (isRedTurn && row > selectedRow) {
+        if (isRedTurn && row < selectedRow) {
             return true;
-        } else if (!isRedTurn && row < selectedRow) {
+        } else if (!isRedTurn && row > selectedRow) {
             return true;
         }
     } else if (rowDiff === 2 && colDiff === 2) {
@@ -226,10 +226,10 @@ function movePiece(row, col) {
 
     // King promotion
     let promoted = false;
-    if (piece === 1 && row === 7) {
+    if (piece === 1 && row === 0) {
         board[row][col] = 3; // Red king
         promoted = true;
-    } else if (piece === 2 && row === 0) {
+    } else if (piece === 2 && row === 7) {
         board[row][col] = 4; // Black king
         promoted = true;
     }
@@ -271,10 +271,10 @@ function canJumpFrom(r, c) {
 
     const directions = [];
     if (isPieceRed || isKing) {
-        directions.push({r: 1, c: -1}, {r: 1, c: 1});
+        directions.push({r: -1, c: -1}, {r: -1, c: 1});
     }
     if (!isPieceRed || isKing) {
-        directions.push({r: -1, c: -1}, {r: -1, c: 1});
+        directions.push({r: 1, c: -1}, {r: 1, c: 1});
     }
 
     for (const dir of directions) {
@@ -309,10 +309,10 @@ function hasAnyValidMoves(isRed) {
             const isKing = (piece === 3 || piece === 4);
             const directions = [];
             if (isRed || isKing) {
-                directions.push({r: 1, c: -1}, {r: 1, c: 1});
+                directions.push({r: -1, c: -1}, {r: -1, c: 1});
             }
             if (!isRed || isKing) {
-                directions.push({r: -1, c: -1}, {r: -1, c: 1});
+                directions.push({r: 1, c: -1}, {r: 1, c: 1});
             }
 
             for (const dir of directions) {
@@ -400,7 +400,7 @@ function makeComputerMove() {
     // 1. King Promotion
     const promotionMoves = moves.filter(m => {
         const piece = board[m.fromR][m.fromC];
-        return piece === 2 && m.toR === 0;
+        return piece === 2 && m.toR === 7;
     });
 
     if (promotionMoves.length > 0) {
