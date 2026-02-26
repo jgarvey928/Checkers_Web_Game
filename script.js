@@ -14,8 +14,8 @@
  * @requires window.requestAnimationFrame
  *
  * @author John S. Garvey
- * @copyright 2023 John S. Garvey
- * @date October 2023
+ * @copyright 2026 John S. Garvey
+ * @date January 2026
  */
 
 // ==========================================
